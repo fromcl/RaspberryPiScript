@@ -1,6 +1,6 @@
 #!/bin/bash
 
-configFile="./mail.ini"  #脚本的执行需要一个配置文件
+configFile="/home/ubuntu/RaspberryPiScript/SendMail/mail.ini"  #脚本的执行需要一个配置文件,注意：必须是绝对路径
 function readIni()
 {
     item=$1;section=$2;file=$3;
@@ -50,10 +50,10 @@ do
             echo "IP is: null"
             temp=$ip_information
         fi
-        sleep 2
+        sleep 30
     else
         temp=`curl --connect-timeout 10 -m 20 -s http://members.3322.org/dyndns/getip`
         echo "Update IP is: $temp"
-        sleep 2
+        sleep 30
     fi
 done
