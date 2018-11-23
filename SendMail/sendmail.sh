@@ -36,7 +36,7 @@ while [ true ]
 do
     if [ "$ip_information" != "$temp" ]
     then
-        ip_information=`curl --connect-timeout 10 -m 20 -s http://members.3322.org/dyndns/getip`
+        ip_information=$temp
         if [ -n "$ip_information" ]
         then
             writeIni "IP" "CurrentInformation" "$configFile" "$ip_information"
@@ -48,7 +48,6 @@ do
             -m "$email_content" -o message-charset=utf-8
         else
             echo "IP is: null"
-            temp=$ip_information
         fi
         sleep 30
     else
