@@ -34,7 +34,7 @@ ip_information=`readIni "IP" "CurrentInformation" "$configFile"`  #防止重启�
 temp=`curl --connect-timeout 10 -m 20 -s http://members.3322.org/dyndns/getip`
 while [ true ]
 do
-    if [ "$ip_information" != "$temp" ]
+    if [ "$ip_information" != "$temp" -a -n "$temp" ]
     then
         ip_information=$temp
         if [ -n "$ip_information" ]
