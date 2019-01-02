@@ -1,6 +1,6 @@
 #!/bin/bash
 
-configFile="/home/ubuntu/RaspberryPiScript/SendMail/mail.ini"  #脚本的执行需要一个配置文件,注意：必须是绝对路径
+configFile="/home/pi/RaspberryPiScript/SendMail/mail.ini"  #脚本的执行需要一个配置文件,注意：必须是绝对路径
 function readIni()
 {
     item=$1;section=$2;file=$3;
@@ -40,7 +40,7 @@ do
         if [ -n "$ip_information" ]
         then
             writeIni "IP" "CurrentInformation" "$configFile" "$ip_information"
-            email_content="$ip_information\n`w`"  #编辑邮件内容信息
+            email_content="$ip_information\nhttp://$ip_information:8081/\n`w`"
             echo -e "$email_content"
             #发送执行部分
             sendemail -f ${email_sender} -t ${email_reciver} -s ${email_smtphost} \
