@@ -40,7 +40,7 @@ do
         if [ -n "$ip_information" ]
         then
             writeIni "IP" "CurrentInformation" "$configFile" "$ip_information"
-            email_content="$ip_information\nhttp://$ip_information:8081/\n`w`"
+	    email_content="$ip_information\nhttp://$ip_information:8081/\nhttp://$ip_information:8082/\nhttp://$ip_information:8083/\nhttps://$ip_information:8090/\n\n`w`\n\n`df -h`"
             echo -e "$email_content"
             #发送执行部分
             sendemail -f ${email_sender} -t ${email_reciver} -s ${email_smtphost} \

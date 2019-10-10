@@ -10,5 +10,5 @@
 
 * 在``/etc/rc.local``文件中添加脚本启动项：
 ```bash
-su ubuntu -c "/home/ubuntu/RaspberryPiScript/SendMail/launch.sh"
+su pi -c "/home/pi/RaspberryPiScript/SendMail/launch.sh"
 ```
