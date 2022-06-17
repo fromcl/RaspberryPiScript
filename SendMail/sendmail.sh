@@ -1,6 +1,6 @@
 #!/bin/bash
 
-configFile="/home/pi/RaspberryPiScript/SendMail/mail.ini"  #脚本的执行需要一个配置文件,注意：必须是绝对路径
+configFile="/home/user/RaspberryPiScript/SendMail/mail.ini"  #脚本的执行需要一个配置文件,注意：必须是绝对路径
 function readIni()
 {
     item=$1;section=$2;file=$3;
@@ -34,13 +34,13 @@ ip_information=`readIni "IP" "CurrentInformation" "$configFile"`  #防止重启�
 temp=`curl --connect-timeout 10 -m 20 -s http://members.3322.org/dyndns/getip`
 while [ true ]
 do
-    if [ "$ip_information" != "$temp" -a -n "$temp" ]
+    if [ "$ip_information" != "$temp" -a -n "$temp" -a ${#temp} -lt 16 ]
     then
         ip_information=$temp
         if [ -n "$ip_information" ]
         then
             writeIni "IP" "CurrentInformation" "$configFile" "$ip_information"
-	    email_content="$ip_information\nhttp://$ip_information:8081/\nhttp://$ip_information:8082/\nhttp://$ip_information:8083/\nhttps://$ip_information:8090/\n\n`w`\n\n`df -h`"
+	    email_content="$ip_information\niKuai: http://$ip_information:8094/\nDD-WRT: http://$ip_information:8081/\nESXI: https://$ip_information:8093/\nCockpit: https://$ip_information:8095/\n\n`w`\n\n`df -h`"
             echo -e "$email_content"
             #发送执行部分
             sendemail -f ${email_sender} -t ${email_reciver} -s ${email_smtphost} \

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-screen -dmS sendmail /home/pi/RaspberryPiScript/SendMail/sendmail.sh
+screen -dmS sendmail /home/user/RaspberryPiScript/SendMail/sendmail.sh
