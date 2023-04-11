@@ -27,21 +27,22 @@ email_sender=`readIni "email_sender" "Sendmail" "$configFile"`  #发送者邮箱
 email_username=`readIni "email_username" "Sendmail" "$configFile"`  #发送者邮箱用户名
 email_password=`readIni "email_password" "Sendmail" "$configFile"`  #邮箱密码
 email_smtphost=`readIni "email_smtphost" "Sendmail" "$configFile"`  #smtp服务器地址
+email_interface=`readIni "email_interface" "Sendmail" "$configFile"`  #监控的网卡名称
 #邮件内容部分
 email_title=`readIni "email_title" "SendmailContent" "$configFile"`
 ip_information=`readIni "IP" "CurrentInformation" "$configFile"`  #防止重启机器时，发送与上次一致的IP信息
 
 ipv4=`curl --connect-timeout 10 -m 20 -s http://members.3322.org/dyndns/getip`
-ipv6=`ifconfig -a | grep '240e' | awk '(NR==1||length(min)>length()){min=$0}END{print $2}'`
+ipv6=`ifconfig ${email_interface} | grep "inet6" | grep -v "fe80" | awk '{print length($2), $2}' | sort -n | awk '{print $2}' | head -n 1`
 while [ true ]
 do
-    if [ "$ip_information" != "$ipv4\n$ipv6" -a -n "$ipv4" -a ${#ipv4} -lt 16 -a ${#ipv6} -lt 40 ]
+    if [ "$ip_information" != "$ipv4\n$ipv6" -a -n "$ipv4" -a ${#ipv4} -lt 16 -a -n "$ipv6" -a ${#ipv6} -lt 40 ]
     then
         ip_information=$ipv4"\n"$ipv6
         if [ -n "$ip_information" ]
         then
             writeIni "IP" "CurrentInformation" "$configFile" "$ip_information"
-            email_content="$ip_information\niKuai: http://$ipv4:8094/\nDD-WRT: http://$ipv4:8081/\nESXI: https://$ipv4:8093/\nCockpit: https://$ipv4:8095/    https://$ipv6/\n\n`w`\n\n`df -h`"
+            email_content="$ip_information\niKuai: http://$ipv4:8094/\nDD-WRT: http://$ipv4:8081/\nESXI: https://$ipv4:8093/\nCockpit: https://$ipv4:8095/    https://[$ipv6]/\n\n`w`\n\n`df -h`"
             echo -e "$email_content"
             #发送执行部分
             sendemail -f ${email_sender} -t ${email_reciver} -s ${email_smtphost} \
@@ -53,7 +54,7 @@ do
         sleep 30
     else
         ipv4=`curl --connect-timeout 10 -m 20 -s http://members.3322.org/dyndns/getip`
-        ipv6=`ifconfig -a | grep '240e' | awk '(NR==1||length(min)>length()){min=$0}END{print $2}'`
+        ipv6=`ifconfig ${email_interface} | grep "inet6" | grep -v "fe80" | awk '{print length($2), $2}' | sort -n | awk '{print $2}' | head -n 1`
         echo "Update IP is: $ipv4    $ipv6"
         sleep 30
     fi
